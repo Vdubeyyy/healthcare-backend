@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Backend API Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(30, 41, 65, 0.85);
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent: #818cf8;
+      --accent-glow: rgba(129, 140, 248, 0.25);
+      --emerald: #34d399;
+      --rose: #fb7185;
+      --amber: #fbbf24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(129, 140, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(52, 211, 153, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      backdrop-filter: blur(20px);
+      background: rgba(9, 13, 22, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--emerald);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: white;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border-color: var(--card-border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .btn-emerald {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--emerald);
+      border-color: rgba(52, 211, 153, 0.3);
+    }
+
+    .btn-emerald:hover {
+      background: rgba(52, 211, 153, 0.25);
+    }
+
+    .btn-danger {
+      background: rgba(251, 113, 133, 0.15);
+      color: var(--rose);
+      border-color: rgba(251, 113, 133, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(251, 113, 133, 0.25);
+    }
+
+    .main-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .data-table-container {
+      overflow-x: auto;
+      margin-top: 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--card-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.9);
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-primary { background: rgba(56, 189, 248, 0.15); color: var(--primary); }
+    .badge-emerald { background: rgba(52, 211, 153, 0.15); color: var(--emerald); }
+    .badge-rose { background: rgba(251, 113, 133, 0.15); color: var(--rose); }
+
+    .console-box {
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      max-height: 250px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: #38bdf8;
+    }
+
+    .token-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 8px;
+      border-radius: 6px;
+      word-break: break-all;
+      color: var(--emerald);
+      margin-top: 6px;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+
+    .pulse {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <i class="fa-solid fa-notes-medical"></i>
+      </div>
+      <div class="brand-text">
+        <h1>Healthcare API Studio</h1>
+        <span><span class="pulse"></span> Server Active (PostgreSQL / SQLite ORM)</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="/api/docs" target="_blank" class="btn btn-ghost">
+        <i class="fa-solid fa-book"></i> Swagger Docs
+      </a>
+      <a href="/Healthcare_Backend.postman_collection.json" download class="btn btn-emerald">
+        <i class="fa-solid fa-file-arrow-down"></i> Postman Collection
+      </a>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <!-- Left Sidebar: Auth & Session -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-shield-halved"></i> JWT Authentication
+        </div>
+
+        <div id="authStatusBox" style="margin-bottom: 1rem;">
+          <span class="badge badge-rose" id="authBadge">Not Authenticated</span>
+          <div id="userGreeting" style="font-size: 0.85rem; margin-top: 6px; color: var(--text-muted);">
+            Please register or log in to manage patients and mappings.
+          </div>
+        </div>
+
+        <div id="authForms">
+          <div class="form-group">
+            <label class="form-label">Full Name (for register)</label>
+            <input type="text" id="authName" class="form-control" placeholder="Dr. Alice Smith" value="Dr. John Watson">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="authEmail" class="form-control" placeholder="user@healthcare.com" value="doctor@healthcare.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="authPassword" class="form-control" placeholder="••••••••" value="SecurePass123">
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 14px;">
+            <button class="btn btn-primary" style="flex: 1;" onclick="handleLogin()">
+              <i class="fa-solid fa-right-to-bracket"></i> Login
+            </button>
+            <button class="btn btn-ghost" style="flex: 1;" onclick="handleRegister()">
+              <i class="fa-solid fa-user-plus"></i> Register
+            </button>
+          </div>
+        </div>
+
+        <div id="authLoggedInActions" style="display: none; margin-top: 1rem;">
+          <div class="form-label">Active JWT Bearer Token:</div>
+          <div class="token-display" id="tokenDisplay">None</div>
+          <button class="btn btn-danger" style="width: 100%; margin-top: 10px;" onclick="handleLogout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Live API Response Console -->
+      <div class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-terminal"></i> Response Console
+        </div>
+        <div class="console-box" id="consoleOutput">Ready. Click any action to test live APIs...</div>
+      </div>
+    </aside>
+
+    <!-- Right Workspace: Management Tabs -->
+    <section>
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('patients')">
+          <i class="fa-solid fa-hospital-user"></i> Patients
+        </button>
+        <button class="tab-btn" onclick="switchTab('doctors')">
+          <i class="fa-solid fa-user-doctor"></i> Doctors
+        </button>
+        <button class="tab-btn" onclick="switchTab('mappings')">
+          <i class="fa-solid fa-link"></i> Doctor Mappings
+        </button>
+      </div>
+
+      <!-- Tab: Patients -->
+      <div id="tab-patients" class="tab-content active">
+        <div class="grid-2">
+          <!-- Create Patient Card -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-plus-circle"></i> Add Patient
+            </div>
+            <div class="form-group">
+              <label class="form-label">Patient Name</label>
+              <input type="text" id="patientName" class="form-control" placeholder="Jane Doe" value="Jane Doe">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="form-group">
+                <label class="form-label">Age</label>
+                <input type="number" id="patientAge" class="form-control" value="28">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gender</label>
+                <select id="patientGender" class="form-control">
+                  <option value="Female">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact</label>
+              <input type="text" id="patientContact" class="form-control" value="+1-555-0199">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input type="text" id="patientAddress" class="form-control" value="742 Evergreen Terrace">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Medical History</label>
+              <input type="text" id="patientHistory" class="form-control" value="Allergic to penicillin">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="createPatient()">
+              <i class="fa-solid fa-user-plus"></i> Submit Patient (POST /api/patients/)
+            </button>
+          </div>
+
+          <!-- Patients List Card -->
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div class="card-title" style="margin: 0;">
+                <i class="fa-solid fa-list-check"></i> My Patients
+              </div>
+              <button class="btn btn-ghost" onclick="fetchPatients()">
+                <i class="fa-solid fa-rotate"></i> Refresh
+              </button>
+            </div>
+            <div class="data-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age/Gender</th>
+                    <th>Contact</th>
+                    <th>Assigned Doctors</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="patientsTableBody">
+                  <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No patients loaded yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Doctors -->
+      <div id="tab-doctors" class="tab-content">
+        <div class="grid-2">
+          <!-- Create Doctor Card -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-user-plus"></i> Add Doctor
+            </div>
+            <div class="form-group">
+              <label class="form-label">Doctor Name</label>
+              <input type="text" id="doctorName" class="form-control" placeholder="Dr. Gregory House" value="Dr. Gregory House">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Specialization</label>
+              <input type="text" id="doctorSpecialization" class="form-control" value="Diagnostics & Nephrology">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" id="doctorEmail" class="form-control" value="dr.house@princeton-plainsboro.org">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="text" id="doctorPhone" class="form-control" value="+1-555-0812">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Available Days</label>
+              <input type="text" id="doctorDays" class="form-control" value="Monday, Wednesday, Friday">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="createDoctor()">
+              <i class="fa-solid fa-plus"></i> Register Doctor (POST /api/doctors/)
+            </button>
+          </div>
+
+          <!-- Doctors List Card -->
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div class="card-title" style="margin: 0;">
+                <i class="fa-solid fa-stethoscope"></i> All Registered Doctors
+              </div>
+              <button class="btn btn-ghost" onclick="fetchDoctors()">
+                <i class="fa-solid fa-rotate"></i> Refresh
+              </button>
+            </div>
+            <div class="data-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Doctor Name</th>
+                    <th>Specialization</th>
+                    <th>Phone</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="doctorsTableBody">
+                  <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No doctors loaded yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Mappings -->
+      <div id="tab-mappings" class="tab-content">
+        <div class="grid-2">
+          <!-- Assign Doctor Card -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fa-solid fa-handshake"></i> Assign Doctor to Patient
+            </div>
+            <div class="form-group">
+              <label class="form-label">Select Patient</label>
+              <select id="mappingPatientSelect" class="form-control">
+                <option value="">-- Choose Patient --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Select Doctor</label>
+              <select id="mappingDoctorSelect" class="form-control">
+                <option value="">-- Choose Doctor --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Appointment Date (Optional)</label>
+              <input type="datetime-local" id="mappingDate" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Consultation Notes (Optional)</label>
+              <input type="text" id="mappingNotes" class="form-control" placeholder="Regular quarterly health screening">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="createMapping()">
+              <i class="fa-solid fa-link"></i> Create Mapping (POST /api/mappings/)
+            </button>
+          </div>
+
+          <!-- Mappings List Card -->
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div class="card-title" style="margin: 0;">
+                <i class="fa-solid fa-table-list"></i> Active Patient-Doctor Mappings
+              </div>
+              <button class="btn btn-ghost" onclick="fetchMappings()">
+                <i class="fa-solid fa-rotate"></i> Refresh
+              </button>
+            </div>
+            <div class="data-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Map ID</th>
+                    <th>Patient</th>
+                    <th>Assigned Doctor</th>
+                    <th>Appointment</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="mappingsTableBody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--text-dim);">No mappings loaded yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

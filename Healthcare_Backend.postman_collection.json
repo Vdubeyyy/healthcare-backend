@@ -1,0 +1,327 @@
+{
+  "info": {
+    "_postman_id": "a8f3b4c1-6e92-48a0-9c1b-29a531e21b01",
+    "name": "Healthcare Backend System API",
+    "description": "Postman Collection for testing all Authentication, Patient, Doctor, and Mapping APIs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Watson\",\n  \"email\": \"watson@healthcare.com\",\n  \"password\": \"SecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register", ""]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"watson@healthcare.com\",\n  \"password\": \"SecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Patient Management",
+      "item": [
+        {
+          "name": "Add Patient (POST /api/patients/)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Cooper\",\n  \"age\": 34,\n  \"gender\": \"Female\",\n  \"contact\": \"+1-555-0101\",\n  \"address\": \"456 Elm St\",\n  \"medical_history\": \"Seasonal allergies\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", ""]
+            }
+          }
+        },
+        {
+          "name": "Retrieve User Patients (GET /api/patients/)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Patient (GET /api/patients/<id>/)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Patient (PUT /api/patients/<id>/)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Cooper Updated\",\n  \"age\": 35,\n  \"gender\": \"Female\",\n  \"contact\": \"+1-555-0999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Patient (DELETE /api/patients/<id>/)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "1", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Doctor Management",
+      "item": [
+        {
+          "name": "Add Doctor (POST /api/doctors/)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Gregory House\",\n  \"specialization\": \"Diagnostics\",\n  \"email\": \"house@hospital.org\",\n  \"phone\": \"+1-555-4321\",\n  \"available_days\": \"Monday, Wednesday\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", ""]
+            }
+          }
+        },
+        {
+          "name": "Retrieve All Doctors (GET /api/doctors/)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Doctor (GET /api/doctors/<id>/)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Doctor (PUT /api/doctors/<id>/)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Gregory House M.D.\",\n  \"specialization\": \"Chief of Diagnostics\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Doctor (DELETE /api/doctors/<id>/)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "1", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Patient-Doctor Mappings",
+      "item": [
+        {
+          "name": "Assign Doctor to Patient (POST /api/mappings/)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": 1,\n  \"doctor_id\": 1,\n  \"appointment_date\": \"2026-11-05T09:30:00Z\",\n  \"notes\": \"Initial consultation\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", ""]
+            }
+          }
+        },
+        {
+          "name": "Retrieve All Mappings (GET /api/mappings/)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Doctors For Patient (GET /api/mappings/<patient_id>/)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Remove Mapping (DELETE /api/mappings/<id>/)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/1/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", "1", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
